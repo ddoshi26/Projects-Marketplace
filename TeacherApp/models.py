@@ -11,13 +11,7 @@ class Teacher(models.Model):
     name = models.CharField(max_length=50, unique=False)
     photo = models.ImageField(upload_to="static/teacherimages", default=0)
     email=models.CharField(max_length=300)
-    user_map=models.OneToOneField(
-		MyUser,
-		on_delete=models.CASCADE,
-		null=True,
-		default=None,
-		)
-    
+    user_map=models.OneToOneField(MyUser, on_delete=models.CASCADE, null=True, default=None)
     university=models.ForeignKey(University, on_delete=models.CASCADE, null=True, default=None)
     courses = models.ManyToManyField(Course) 
 
