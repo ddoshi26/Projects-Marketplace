@@ -43,7 +43,7 @@ def getTeacher(request):
 def getTeacherForm(request):
 	if request.user.is_authenticated():
 		# Auto Complete name and email from request.user
-		return render(request, 'teacherform.html')
+		return render(request, 'teacherform.html', )
 	#else
 	return render(request, 'autherror.html')
 
@@ -77,21 +77,21 @@ def getTeacherFormSuccess(request):
 
 def updateTeacher(request):
 	if request.user.is_authenticated():
-	   if request.user.is_professor:
-		user_email = request.user.email
-		object_teacher = Teacher.objects.get(email=user_email)
-		form = TeacherUpdateForm(request.POST or None, instance=object_teacher)#models.Teacher.objects.filter(email=request.user.email))
-		
-		if form.is_valid():
-			form.save()
-			messages.success(request, 'Success, your teacher profile was saved!')
-		
-		context = {
-			"form": form,
-			"page_name" : "Update Teacher",
-			"button_value" : "Update",
-			"links" : ["logout"],
-		}
-		return render(request, 'auth_form.html', context)
-	   return render(request, 'teacherautherror.html')	
+	   	if request.user.is_professor:
+			user_email = request.user.email
+			object_teacher = Teacher.objects.get(email=user_email)
+			form = TeacherUpdateForm(request.POST or None, instance=object_teacher)#models.Teacher.objects.filter(email=request.user.email))
+			
+			if form.is_valid():
+				form.save()
+				messages.success(request, 'Success, your teacher profile was saved!')
+			
+			context = {
+				"form": form,
+				"page_name" : "Update Teacher",
+				"button_value" : "Update",
+				"links" : ["logout"],
+			}
+			return render(request, 'auth_form.html', context)
+	   	return render(request, 'teacherautherror.html')	
 	return render(request, 'autherror.html') 

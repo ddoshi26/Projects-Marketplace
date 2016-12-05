@@ -19,11 +19,13 @@ class MyUserManager(BaseUserManager):
         #Only the email field is required
         user = self.model(email=email)
         user.last_name = last_name
-	user.set_password(password)
+        user.first_name = first_name
+	
+        user.set_password(password)
 
         #If first_name is not present, set it as email's username by default
-        if first_name is None or first_name == "" or first_name == '':                                
-            user.first_name = email[:email.find("@")]            
+        #if first_name is None or first_name == "" or first_name == '':                                
+        #    user.first_name = email[:email.find("@")]            
 
         #Classify the Users as Students, Professors, Engineers
         if is_student == True and is_professor == True and is_engineer == True:
@@ -40,6 +42,7 @@ class MyUserManager(BaseUserManager):
         
         user.save(using=self._db)
         return user
+
 
     def create_superuser(self, email=None, password=None, first_name=None, last_name=None):
         user = self.create_user(email, password=password, first_name=first_name, last_name=last_name,

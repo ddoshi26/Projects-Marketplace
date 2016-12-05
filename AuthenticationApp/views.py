@@ -50,20 +50,30 @@ def auth_register(request):
 	
 	form = RegisterForm(request.POST or None)
 	if form.is_valid():
-		new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
+		print('printing')
+		print(form.cleaned_data['firstname'])
+		print(form.cleaned_data['lastname'])
+		new_user = MyUser.objects.create_user(
+			email=form.cleaned_data['email'], 
 			password=form.cleaned_data["password2"], 
-			first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'],
-    		is_student=form.cleaned_data['student'], is_professor=form.cleaned_data['professor'], 
+			first_name=form.cleaned_data['firstname'], 
+			last_name=form.cleaned_data['lastname'],
+    		is_student=form.cleaned_data['student'], 
+    		is_professor=form.cleaned_data['professor'], 
     		is_engineer=form.cleaned_data['engineer'])
 		new_user.save()	
-		login(request, new_user);	
-		messages.success(request, 'Success! Your account was created.')
-		
-		if form.cleaned_data['professor']==True:
-			return render(request, 'teacherform.html')
-
-		return render(request, 'index.html')
-
+		# logging in this motherfucker
+		user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data["password2"])
+		if user is not None:
+			login(request, user)
+			messages.success(request, 'Success! Welcome, ' + (user.first_name or "") + ' ' + (user.last_name or ""))
+			if form.cleaned_data['professor']==True:
+				return render(request, 'teacherform.html')
+			else:
+				return render(request, 'index.html')
+		else:
+			print("you truly fucked up")
+			
 	context = {
 		"form": form,
 		"page_name" : "Register",
@@ -78,7 +88,6 @@ def update_profile(request):
 	if form.is_valid():
 		form.save()
 		messages.success(request, 'Success, your profile was saved!')
-		#return render(request, 'teacherupdateform.html')
 
 	context = {
 		"form": form,
