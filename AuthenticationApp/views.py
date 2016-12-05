@@ -58,6 +58,10 @@ def auth_register(request):
 		new_user.save()	
 		login(request, new_user);	
 		messages.success(request, 'Success! Your account was created.')
+		
+		if form.cleaned_data['professor']==True:
+			return render(request, 'teacherform.html')
+
 		return render(request, 'index.html')
 
 	context = {
@@ -74,6 +78,7 @@ def update_profile(request):
 	if form.is_valid():
 		form.save()
 		messages.success(request, 'Success, your profile was saved!')
+		#return render(request, 'teacherupdateform.html')
 
 	context = {
 		"form": form,
