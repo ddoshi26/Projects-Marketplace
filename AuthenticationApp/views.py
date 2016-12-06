@@ -50,9 +50,6 @@ def auth_register(request):
 	
 	form = RegisterForm(request.POST or None)
 	if form.is_valid():
-		print('printing')
-		print(form.cleaned_data['firstname'])
-		print(form.cleaned_data['lastname'])
 		new_user = MyUser.objects.create_user(
 			email=form.cleaned_data['email'], 
 			password=form.cleaned_data["password2"], 
@@ -62,13 +59,17 @@ def auth_register(request):
     		is_professor=form.cleaned_data['professor'], 
     		is_engineer=form.cleaned_data['engineer'])
 		new_user.save()	
+
 		# logging in this motherfucker
 		user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data["password2"])
+		
 		if user is not None:
 			login(request, user)
 			messages.success(request, 'Success! Welcome, ' + (user.first_name or "") + ' ' + (user.last_name or ""))
 			if form.cleaned_data['professor']==True:
 				return render(request, 'teacherform.html')
+			elif form.cleaned_data['engineer']==True:
+				return render(request, 'engineerform.html')
 			else:
 				return render(request, 'index.html')
 		else:

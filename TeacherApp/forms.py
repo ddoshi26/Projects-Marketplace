@@ -13,13 +13,13 @@ class TeacherUpdateForm(forms.ModelForm):
 	fields = ('name', 'photo', 'email')
 
     def clean_email(self):
-	email=self.cleaned_data.get("email")
-	
-	if email == self.initial["email"]:
-		return email
+		email=self.cleaned_data.get("email")
+		
+		if email == self.initial["email"]:
+			return email
 
-	try:
-		exists = MyUser.objects.get(email=email)
-		raise forms.ValidationError("This email has already been taken")
-	except MyUser.DoesNotExist:
-		return email
+		try:
+			exists = MyUser.objects.get(email=email)
+			raise forms.ValidationError("This email has already been taken")
+		except MyUser.DoesNotExist:
+			return email

@@ -1,0 +1,16 @@
+{% extends "body.html" %}
+
+{% block content %}
+        <!-- Content -->
+    <div class="container theme-showcase" role="main">
+                <div class="jumbotron">
+                        <img src="/{{ engineer.photo }}" alt="Engineer Image" width=150/>
+                        
+                        <h3><b>Engineer Id:</b> {{ engineer.engineer_id }}</h3>
+                        
+                        <h3><b>Engineer Name:</b> {{ engineer.name }}</h3>
+                        
+                        <p><h3><b>Email: </b>{{ engineer.email }}</h3></p>
+                </div>
+    </div>
+{% endblock %}
