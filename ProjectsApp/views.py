@@ -8,9 +8,10 @@ from . import models
 
 def getProjects(request):
 	projects_list = models.Project.objects.all()
+	
 	return render(request, 'projects.html', {
-        'projects': projects_list,
-    })
+        	'projects': projects_list,
+	})
 
 def getProjectForm(request):
 	if request.user.is_authenticated():
@@ -21,3 +22,7 @@ def getProjectForm(request):
 
 def getProject(request):
 	return render(request, 'project.html')
+
+#def getProjectFormSuccess(request):
+#	if request.user.is_authenticated():
+#		if request.method == 'POST':			

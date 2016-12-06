@@ -5,6 +5,7 @@ Created by Harris Christiansen on 10/02/16.
 from django.db import models
 from AuthenticationApp.models import MyUser
 from GroupsApp.models import Group
+from CompaniesApp.models import Company
 
 class Project(models.Model):
     name = models.CharField(max_length=200)
@@ -16,6 +17,7 @@ class Project(models.Model):
     experience = models.IntegerField(default=0)
     skills = models.CharField(max_length=200, default=None)
     group = models.OneToOneField(Group, null=True, default=None)
+    company = models.ForeignKey(Company, null=True, default=None)
 
     def __str__(self):
         return self.name
