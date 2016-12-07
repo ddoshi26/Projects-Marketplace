@@ -9,9 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib import messages
 
-
 from .forms import LoginForm, RegisterForm, UpdateForm
 from .models import MyUser
+from TeacherApp.models import Teacher
 
 # Auth Views
 
@@ -84,11 +84,19 @@ def auth_register(request):
 
 @login_required
 def update_profile(request):
+	old_email = request.user.email
 	form = UpdateForm(request.POST or None, instance=request.user)
 	if form.is_valid():
+		if form.cleaned_data['email'] != old_email:
+			teacher_obj = Teacher.objects.get(email=old_email)
+			teacher_obj.email = form.cleaned_data['email']
+			teacher_obj.save()
+		
 		form.save()
 		messages.success(request, 'Success, your profile was saved!')
 
+		teacher_obj2= Teacher.objects.get(email=request.user.email)
+		teacher_obj2.user_map=request.user
 	context = {
 		"form": form,
 		"page_name" : "Update",

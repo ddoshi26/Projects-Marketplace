@@ -1,0 +1,24 @@
+{% extends "body.html" %}
+
+{% block content %}
+        <!-- Content -->
+        <div class="container" role="main">
+                <div class="jumbotron">
+                        <h3 style="margin: 0px; padding: 0px;">Add Student</h3>
+                </div>
+                <div class="panel panel-default">
+                        <form method="post" enctype="multipart/form-data" action="addstudentsformsuccess" class="panel-body validate">
+                {% csrf_token %}
+                                <label for="University">Project</label>
+                		<h6 style="color:red">{{ error }}</h6>
+				<input type="text" name="university" id="university" placeholder="University" class="form-control" data-bvalidator="required" data-bvalidator-msg="University Required">
+                                <br>
+				<label for="group">Group name</label>
+                                <h6 style="color:red">{{ error }}</h6>
+                                <input type="text" name="group" id="group" placeholder="group" class="form-control" data-bvalidator="required" data-bvalidator-msg="Group Required">
+                                <br>
+			        <input type="submit" value="Submit" class="btn btn-primary">
+			</form>
+		</div>
+	</div>
+{% endblock %}
