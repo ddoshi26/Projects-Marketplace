@@ -54,7 +54,8 @@ def getEngineerFormSuccess(request):
 			if form.is_valid():
 				# check if an engineer with the same name already exists
 				if models.Engineer.objects.filter(name__exact=form.cleaned_data['name']).exists():
-					return render(request, 'engineerform.html', {'error': 'Error: The name entered already exists!'})
+					return render(request, 'engineerform.html', 
+						{'error': 'Error: The name entered already exists!'})
 				else:
 					new_engineer = models.Engineer(
 							name=form.cleaned_data['name'],
@@ -68,6 +69,27 @@ def getEngineerFormSuccess(request):
 						'name' : form.cleaned_data['name']
 					}
 					return render(request, 'engineerformsuccess.html', context)
+			# when image is not given, use default image
+			else:
+				form = forms.EngineerForm(request.POST)
+				# check if an engineer with the same name already exists
+				if models.Engineer.objects.filter(name__exact=form.data['name']).exists():
+					return render(request, 'engineerform.html', 
+						{'error': 'Error: The name entered already exists!'})
+				else:
+					new_engineer = models.Engineer(
+							name=form.data['name'],
+							photo='static/engineerimages/defaultengineerimage.png',
+							email=form.data['email'],
+							user_map=request.user
+						)
+					new_engineer.save()
+
+					context = {
+						'name' : form.data['name']
+					}
+					return render(request, 'engineerformsuccess.html', context)
+
 		else:
 			return render(request, 'engineerform.html')
 	else:

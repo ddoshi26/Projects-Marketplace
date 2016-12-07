@@ -42,7 +42,7 @@ def auth_login(request):
 def auth_logout(request):
 	logout(request)
 	messages.success(request, 'Success, you are now logged out')
-	return render(request, 'index.html')
+	return render(request, 'index2.html')
 
 def auth_register(request):
 	if request.user.is_authenticated():
