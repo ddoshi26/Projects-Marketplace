@@ -7,7 +7,6 @@ from django.shortcuts import render
 def getIndex(request):
 	if request.user.is_authenticated():
 		name = request.user.first_name
-		print('name =' + name)
 		usertype = None
 		if request.user.is_professor:
 			usertype = "teacher"
@@ -19,7 +18,6 @@ def getIndex(request):
 			'name' : name,
 			'usertype' : usertype
 		}
-		print('usertype =' + usertype)
 		return render(request, 'index2.html', context)
 
 	else:

@@ -21,12 +21,14 @@
 				<thead>
 					<tr>
 						<th>Users</th>
+						<th>Email Addresses</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in group.members.all %}
 					<tr>
 						<td>{{ item.get_full_name }}</td>
+						<td>{{ item.email }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
