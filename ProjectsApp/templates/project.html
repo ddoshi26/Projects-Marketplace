@@ -5,8 +5,20 @@
 	<!-- Content -->
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
-			<h1>Project</h1>
-			<p>Description</p>
+			<h3><b>Project:<b>  {{ project.name }}</h3>
+			<h3><b>Description:</b> {{ project.description }}</h3>
+			<h3><b>Created At:</b> {{ project.created_at }}</h3>
+			<h3><b>Last Update:</b> {{ project.updated_at }}</h3>
+			<h3><b>Created By:</b> {{ project.created_by }}</h3>
+			<br>
+			<h2>Requirements</h2>
+			<br>
+			<h3><b>Programming Languages</b><p></p><p> {{ project.programming_language }} </p></h3>
+			<h3><b>Experience<b><p></p><p> {{ project.experience }} </p></h3>
+			<h3><b>Skills<b><p></p><p> {{ project.skills }}</p></h3>
+			<h3><b>Company<b><p></p><p> {{ project.company }} </p></h3>
+			<br>
+			<a href="/project/addgroup?name={{ project.name }}" class="btn btn-default">Add group</a>
 		</div>
 	</div>
 

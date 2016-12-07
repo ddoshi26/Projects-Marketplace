@@ -9,12 +9,20 @@
 				<thead>
 					<tr>
 						<th>Project Name</th>
+						<th>Created By</th>
+						<th>Programming Languages</th>
+						<th>Experience</th>
+						<th>Skills</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for project in projects %}
 					<tr>
-						<td>{{ project.name }}</td>
+						<td><a href="/project?name={{ project.name }}">{{ project.name }}</a></td>
+						<td>{{ project.created_by }}</td>
+						<td>{{ project.programming_language }}</td>
+						<td>{{ project.experience }}</td>
+						<td>{{ project.skills }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>

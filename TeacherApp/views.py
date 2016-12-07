@@ -52,18 +52,22 @@ def getTeacherFormSuccess(request):
 		if request.method == 'POST':
 			form = forms.TeacherForm(request.POST, request.FILES)
 			if form.is_valid():
-				if models.Teacher.objects.filter(name__exact=form.cleaned_data['name']).exists():
-					return render(request, 'teacherform.html', {'error': 'Error: The teacher name entered already exists!'})
+				#if models.Teacher.objects.filter(name__exact=form.cleaned_data['name']).exists():
+				#	return render(request, 'teacherform.html', {'error': 'Error: The teacher name entered already exists!'})
 				#else
-				new_teacher_object = models.Teacher(name=form.cleaned_data['name'],
+				in_user=request.user
+				in_full_name = request.user.first_name + ' ' + request.user.last_name
+				in_email = request.user.email
+
+				new_teacher_object = models.Teacher(name=in_full_name,
 								photo=request.FILES['photo'],
-								email=form.cleaned_data['email'],
+								email=in_email,
 								user_map=request.user,
 								)
 				new_teacher_object.save()
 				
 				context = {
-					'name': form.cleaned_data['name'],
+					'name': in_full_name,
 				}
 				
 				return render(request, 'teacherformsuccess.html', context)
@@ -80,12 +84,21 @@ def updateTeacher(request):
 	   	if request.user.is_professor:
 			user_email = request.user.email
 			object_teacher = Teacher.objects.get(email=user_email)
+			object_user = object_teacher.user_map
 			form = TeacherUpdateForm(request.POST or None, instance=object_teacher)#models.Teacher.objects.filter(email=request.user.email))
 			
 			if form.is_valid():
+				if form.cleaned_data['email'] != user_email:
+					#request.user.email = form.cleaned_data['email']
+					object_user.email=form.cleaned_data['email']
+					object_user.save()	
+			
 				form.save()
 				messages.success(request, 'Success, your teacher profile was saved!')
-			
+				
+			object_teacher.user_map=object_user
+			object_teacher.save()
+
 			context = {
 				"form": form,
 				"page_name" : "Update Teacher",
