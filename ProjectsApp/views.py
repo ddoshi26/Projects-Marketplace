@@ -34,7 +34,7 @@ def getProject(request):
 		in_project = models.Project.objects.get(name__exact=in_name)
 	
 		bookmarked = True
-		
+
 		try:
 			existing_obj=request.user.bookmarks.get(project=in_name)
 		except ObjectDoesNotExist:
@@ -220,7 +220,4 @@ def getGroupFormSuccess(request):
             return render(request, 'addgroup.html', context)
     else:
         return render(request, 'autherror.html')
-
-
-
 
