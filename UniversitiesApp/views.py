@@ -4,9 +4,11 @@ UniversitiesApp Views
 Created by Jacob Dunbar on 11/5/2016.
 """
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
 
 from . import models
 from . import forms
+from TeacherApp.models import Teacher
 
 def getUniversities(request):
     if request.user.is_authenticated():
@@ -67,8 +69,14 @@ def joinUniversity(request):
         in_university = models.University.objects.get(name__exact=in_name)
         in_university.members.add(request.user)
         in_university.save();
-        request.user.university_set.add(in_university)
-        request.user.save()
+        request.user.university_set.add(in_university)	
+	request.user.save()
+
+	if request.user.is_professor:
+		teacher_object = Teacher.objects.get(email=request.user.email)
+		teacher_object.university = in_university
+		teacher_object.save()
+
         context = {
             'university' : in_university,
             'userIsMember': True,
@@ -84,6 +92,12 @@ def unjoinUniversity(request):
         in_university.save();
         request.user.university_set.remove(in_university)
         request.user.save()
+
+	if request.user.is_professor:
+                teacher_object = Teacher.objects.get(email=request.user.email)
+                teacher_object.university = None
+                teacher_object.save()
+
         context = {
             'university' : in_university,
             'userIsMember': False,
@@ -156,7 +170,10 @@ def removeCourse(request):
 		in_university = models.University.objects.get(name__exact=in_university_name)
 		in_course_tag = request.GET.get('course', 'None')
 		in_course = in_university.course_set.get(tag__exact=in_course_tag)
-		in_course.delete()
+		
+		if request.user.is_admin or request.user.is_professor:
+			in_course.delete()
+
 		is_member = in_university.members.filter(email__exact=request.user.email)
 		context = {
 			'university' : in_university,
@@ -175,7 +192,14 @@ def joinCourse(request):
 		in_course.members.add(request.user)
 		in_course.save();
 		request.user.course_set.add(in_course)
+		request.user.university_set.add(in_university)
 		request.user.save()
+		
+		if request.user.is_professor:
+                	teacher_object = Teacher.objects.get(email=request.user.email)
+                	teacher_object.courses.add(in_course)
+                	teacher_object.save()		
+
 		context = {
 			'university' : in_university,
 			'course' : in_course,
@@ -194,6 +218,12 @@ def unjoinCourse(request):
 		in_course.save();
 		request.user.course_set.remove(in_course)
 		request.user.save()
+		
+		if request.user.is_professor:
+                	teacher_object = Teacher.objects.get(email=request.user.email)
+                	teacher_object.courses.remove(in_course)
+                	teacher_object.save()	
+
 		context = {
 			'university' : in_university,
 			'course' : in_course,
@@ -213,46 +243,43 @@ def addStudentsFormSuccess(request):
 			if request.user.is_professor == True:
 				form = forms.AddStudentsForm(request.POST)
 				if form.is_valid():
-					in_university_name = request.GET.get('name', 'None')
-					in_university = models.University.objects.get(name__exact=in_university_name)
-					in_course_id = request.GET.get('course', 'None')
-					in_course = models.Course.objects.get(tag__exact=in_course_id)
+					in_university_name = form.cleaned_data['university']
+					
+					try:
+						in_university = models.University.objects.get(name__exact=in_university_name)
+					except ObjectDoesNotExist:
+						return render(request, 'addstudents.html', {'error': 'University Name is invalid'})
+
+					in_course_id = form.cleaned_data['course']
+					
+					try:
+						in_course = models.Course.objects.get(tag__exact=in_course_id)
+					except ObjectDoesNotExist:
+						return render(request, 'addstudents.html', {'error': 'Course Tag is invalid'})
 					
 					in_user_email = form.cleaned_data['email']
-					in_user=models.MyUser.objects.get(email__exact=in_user_email)
 					
-					user_set = in_course.value_list('members', flat=True)
-				  	if in_user in user_set:
-						return render(request, 'addstudents.html', {'error' : 'Error: The user is already added to the course'})
-					return render(request, 'createcourseautherror.html')
+					try:
+						in_user=models.MyUser.objects.get(email__exact=in_user_email)
+					except ObjectDoesNotExist:
+						return render(request, 'addstudents.html', {'error': 'User with email provided does not exist'})
+
+					if in_user.is_student:
+						in_university.members.add(in_user)
+						in_course.members.add(in_user)
+						
+						context = {
+							'name' : in_university_name,
+						}
+
+						return render(request, 'addstudentsuccess.html', context)
+					else:
+						return render(request, 'notstudenterror.html')
 				else:
-					return render(request, 'addstudents.html', {'error' : 'Error'})
-			return render(request, 'createcourseautherror.html')
+					return render(request, 'addstudents.html', {'error' : 'Error: Invalid inputs'})
+			else:
+				return render(request, 'createcourseautherror.html')
 		else:
 			form = forms.AddStudentsForm()
 			return render(request, 'addstudents.html')
-	return render(request, 'autherror.html')					
-
-def addStudents(request):
-	if request.user.is_authenticated():
-		if request.user.is_professor == True:
-			in_university_name = request.GET.get('name', 'None')
-			in_university = models.University.objects.get(name__exact=in_university_name)
-                	in_course_tag = request.GET.get('course', 'None')
-                	in_course = in_university.course_set.get(tag__exact=in_course_tag)
-			
-			in_student_email = request.GET.get('student', 'None')
-			in_student = models.MyUser.objects.get(email__exact=in_student_email)
-			
-			in_course.members.add(in_student)
-			in_student.course_set.add(in_course)
-			in_student.save()
-
-			context = {
-				'university' : in_university,
-				'coourse' : in_course,
-			}
-			return render(request, 'course.html', context)
-		return render(request, 'autherror.html')
-	return render(request, 'autherror.html')
-		
+	return render(request, 'autherror.html')							

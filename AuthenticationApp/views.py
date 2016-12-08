@@ -60,7 +60,7 @@ def auth_register(request):
     		is_engineer=form.cleaned_data['engineer'])
 		new_user.save()	
 
-		# logging in this motherfucker
+		# logging in
 		user = authenticate(email=form.cleaned_data['email'], password=form.cleaned_data["password2"])
 		
 		if user is not None:
@@ -73,7 +73,7 @@ def auth_register(request):
 			else:
 				return render(request, 'index.html')
 		else:
-			print("you truly fucked up")
+			print "Big time error"
 			
 	context = {
 		"form": form,

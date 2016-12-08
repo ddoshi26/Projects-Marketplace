@@ -20,26 +20,26 @@
 		
 		
     </div>
-    <script>
-	function SomeDeleteRowFunction(o) {
-     		//no clue what to put here?
-     		var p=o.parentNode.parentNode;
-        	p.parentNode.removeChild(p);
-    	}
-    </script>
     <div class="container" role="main">
 		<div class="table-responsive">
 			<table class="table table-striped sortable">
 				<thead>
 					<tr>
-						<th>Students</th>
+						<th>Full Name</th>
+						<th>Email</th>
+						<th>Student/Teacher</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in course.members.all %}
 					<tr>
 						<td>{{ item.get_full_name }}</td>
-						<!--td><input type="button" value="Delete Row" onclick="SomeDeleteRowFunction(this)"></td-->
+						<td>{{ item.email }}</td>
+						{% if item.is_student %}
+							<td>Student</td>
+						{% else %}
+							<td>Teacher</td>
+						{% endif %}
 					</tr>
 					{% endfor %}
 				</tbody>
