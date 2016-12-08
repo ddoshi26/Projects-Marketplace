@@ -78,5 +78,20 @@ def getProjectFormSuccess(request):
 		else:
 			return render(request, 'engineerautherror.html')
 	return render(request, 'autherror.html')
-				
-							
+
+def deleteProject(request):
+	if request.user.is_authenticated():
+		if request.user.is_admin or request.user.is_engineer:
+			in_name = request.GET.get('name', 'None')
+
+			project_object = models.Project.objects.get(name__exact=in_name)
+
+			if project_object.created_by == request.user or request.user.is_admin:
+				project_object.delete()
+				return render(request, 'projects.html')	
+			else:
+				return render(request, 'deleteformfailure.html')
+		else:
+			return render(request, 'deleteautherror.html')
+	else:
+		return render(request, 'autherror.html') 										
