@@ -32,7 +32,7 @@ def getProject(request):
 	if request.user.is_authenticated():
 		in_name = request.GET.get('name', 'None')
 		in_project = models.Project.objects.get(name__exact=in_name)
-	
+		
 		bookmarked = True
 
 		try:
@@ -220,4 +220,3 @@ def getGroupFormSuccess(request):
             return render(request, 'addgroup.html', context)
     else:
         return render(request, 'autherror.html')
-
