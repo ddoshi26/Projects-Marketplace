@@ -22,10 +22,19 @@
 			{% if project.group %}
 				<h2><b>Group assigned:<b><p></p><p> <a href="/group?name={{ project.group.name }}">{{ project.group }} </p></h2></a>
 				<a href="/project/addgroup?projectname={{ project.name }}" class="btn btn-default">Change group</a>
+                        {% else %}
+				<a href="/project/addgroup?projectname={{ project.name }}" class="btn btn-default">Add group</a>
+                        {% endif %}
+
+			<a href="/project/update?name={{ project.name }}" class="btn btn-default">Update Project</a>
+			<a href="/project/addgroup?name={{ project.name }}" class="btn btn-default">Add group</a>
+			{% if bookmarked %}
+			<a href="/project/unbookmark?name={{ project.name }}" class="btn btn-default">Unbookmark This Project</a>
 			{% else %}
+			<a href="/project/bookmark?name={{ project.name }}" class="btn btn-default">Bookmark This Project</a>
 				<a href="/project/addgroup?projectname={{ project.name }}" class="btn btn-default">Add group</a>
 			{% endif %}
-			
+			<a href="/project/delete?name={{ project.name }}" class="btn btn-default">Delete Project</a>
 		</div>
 	</div>
 
