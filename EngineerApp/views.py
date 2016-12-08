@@ -53,59 +53,73 @@ def getEngineerFormSuccess(request):
 			form = forms.EngineerForm(request.POST, request.FILES)
 			if form.is_valid():
 				# check if an engineer with the same name already exists
-				if models.Engineer.objects.filter(name__exact=form.cleaned_data['name']).exists():
-					return render(request, 'engineerform.html', 
-						{'error': 'Error: The name entered already exists!'})
-				else:
-					new_engineer = models.Engineer(
-							name=form.cleaned_data['name'],
-							photo=request.FILES['photo'],
-							email=form.cleaned_data['email'],
-							user_map=request.user
-						)
-					new_engineer.save()
+				#if models.Engineer.objects.filter(name__exact=form.cleaned_data['name']).exists():
+				#	return render(request, 'engineerform.html', 
+				#		{'error': 'Error: The name entered already exists!'})
+				#else:
+				in_user=request.user
+				in_full_name = request.user.first_name + ' ' + request.user.last_name
+				in_email = request.user.email
 
-					context = {
-						'name' : form.cleaned_data['name']
-					}
-					return render(request, 'engineerformsuccess.html', context)
+				new_engineer = models.Engineer(
+						name=in_full_name,
+						photo=request.FILES['photo'],
+						email=in_email,
+						user_map=request.user
+				)
+				new_engineer.save()
+
+				context = {
+					'name' : in_full_name,
+				}
+				return render(request, 'engineerformsuccess.html', context)
 			# when image is not given, use default image
 			else:
 				form = forms.EngineerForm(request.POST)
 				# check if an engineer with the same name already exists
-				if models.Engineer.objects.filter(name__exact=form.data['name']).exists():
-					return render(request, 'engineerform.html', 
-						{'error': 'Error: The name entered already exists!'})
-				else:
-					new_engineer = models.Engineer(
-							name=form.data['name'],
-							photo='static/engineerimages/defaultengineerimage.png',
-							email=form.data['email'],
-							user_map=request.user
-						)
-					new_engineer.save()
+				#if models.Engineer.objects.filter(name__exact=form.data['name']).exists():
+				#	return render(request, 'engineerform.html', 
+				#		{'error': 'Error: The name entered already exists!'})
+				#else:
+				in_user=request.user
+                                in_full_name = request.user.first_name + ' ' + request.user.last_name
+                                in_email = request.user.email
+	
+				new_engineer = models.Engineer(
+						name=in_full_name,
+						photo='static/engineerimages/defaultengineerimage.png',
+						email=in_email,
+						user_map=request.user
+				)
+				new_engineer.save()
 
-					context = {
-						'name' : form.data['name']
-					}
-					return render(request, 'engineerformsuccess.html', context)
-
+				context = {
+					'name' : in_full_name,
+				}
+				return render(request, 'engineerformsuccess.html', context)
 		else:
 			return render(request, 'engineerform.html')
 	else:
 		return render(request, 'autherror.html')
-
 
 def updateEngineer(request):
 	if request.user.is_authenticated():
 		if request.user.is_engineer:
 			user_email = request.user.email
 			engineer = Engineer.objects.get(email=user_email)
+			object_user =  engineer.user_map
 			form = EngineerUpdateForm(request.POST or None, instance=engineer)
 
 			if form.is_valid():
+				if form.cleaned_data['email'] != user_email:
+					object_user.email=form.cleaned_data['email']
+					object_user.save()
+
 				form.save()
 				messages.success(request, 'Success, your profile was saved!')
+
+			engineer.user_map=object_user
+			engineer.save()
 
 			context = {
 				"form": form,

@@ -12,7 +12,7 @@ from django.contrib import messages
 from .forms import LoginForm, RegisterForm, UpdateForm
 from .models import MyUser
 from TeacherApp.models import Teacher
-
+from EngineerApp.models import Engineer
 # Auth Views
 
 def auth_login(request):
@@ -88,16 +88,27 @@ def update_profile(request):
 	old_email = request.user.email
 	form = UpdateForm(request.POST or None, instance=request.user)
 	if form.is_valid():
-		if form.cleaned_data['email'] != old_email:
+		if form.cleaned_data['is_professor'] == True and form.cleaned_data['email'] != old_email:
 			teacher_obj = Teacher.objects.get(email=old_email)
 			teacher_obj.email = form.cleaned_data['email']
 			teacher_obj.save()
+
+		elif form.cleaned_data['is_engineer'] == True and form.cleaned_data['email'] != old_email:
+                        engineer_obj = Engineer.objects.get(email=old_email)
+                        engineer_obj.email = form.cleaned_data['email']
+                        engineer_obj.save()
 		
 		form.save()
 		messages.success(request, 'Success, your profile was saved!')
+		
+		if form.cleaned_data['is_professor'] == True:
+			teacher_obj2= Teacher.objects.get(email=request.user.email)
+			teacher_obj2.user_map=request.user
 
-		teacher_obj2= Teacher.objects.get(email=request.user.email)
-		teacher_obj2.user_map=request.user
+		elif form.cleaned_data['is_engineer'] == True:
+			engineer_obj2=Engineer.objects.get(email=request.user.email)
+			engineer_obj2.user_map=request.user
+
 	context = {
 		"form": form,
 		"page_name" : "Update",

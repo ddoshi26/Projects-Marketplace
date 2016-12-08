@@ -2,6 +2,7 @@ from django import forms
 
 from models import MyUser
 from EngineerApp.models import Engineer
+from .models import Project
 
 class ProjectForm(forms.Form):
 	name = forms.CharField(label='Name', max_length=200, widget=forms.TextInput, required=True)
@@ -9,3 +10,9 @@ class ProjectForm(forms.Form):
 	planguage = forms.CharField(label='Programming Language', max_length=100, widget=forms.TextInput, required=True)
 	exp = forms.CharField(label='Experience', max_length=200, widget=forms.TextInput)
 	skills = forms.CharField(label='Skills', max_length=200, widget=forms.TextInput, required=True)
+
+class ProjectUpdateForm(forms.ModelForm):
+	class Meta:
+		model = Project
+		fields = ('name', 'description', 'programming_language', 'experience', 'skills')
+
