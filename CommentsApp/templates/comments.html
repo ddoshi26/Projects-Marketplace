@@ -1,13 +1,20 @@
 {% extends "body.html" %}
 {% block content %}
     <!-- Content -->
+    
     <div class="container" role="main">
+      <a href="/group?name={{ groupname }}" class="btn btn-default">Go back to Group Page</a>
+      <h1> {{ groupname }} comments </h1>  
+        
+      <!-- table of comments -->
         <div class="table-responsive">
             <table class="table table-striped sortable">
                 <thead>
                     <tr>
                       <th style="width: 20%">Time</th>
-                        <th style="width: 80%">Comment</th>
+                      <th style="width: 40%">Comment</th>
+                      <th style="width: 20%">Name</th>
+                      <th style="width: 20%">Email</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -15,10 +22,23 @@
                    <tr>
                        <td>{{ item.time }}</td>
                        <td>{{ item.comment }}</td>
+                       <td>{{ item.cname }}</td>
+                       <td>{{ item.cemail }}</td>
                    </tr>
                    {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <!-- comment form -->
+        <div class="panel panel-default">
+        <form method="post" enctype="multipart/form-data" action="/addcomment/group?name={{ groupname }}" class="panel-body validate">
+        {% csrf_token %}
+             <label for="comment">Comment</label>
+             <input type="text" name="comment" id="comment" placeholder="Comment" class="form-control" data-bvalidator="required" data-bvalidator-msg="Comment Required">
+             <br>
+             <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+    </div>
     </div>
 {% endblock %}
