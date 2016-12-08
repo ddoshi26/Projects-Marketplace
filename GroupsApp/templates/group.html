@@ -9,6 +9,7 @@
 			<p>{{ group.description }}</p>
 			{% if userIsMember %}
 			<a href="group/addmemberform?name={{ group.name }}" class="btn btn-default">Add New Member</a>
+			<a href="/group/delete?name={{ group.name }}" class="btn btn-default">Delete Group</a>
 			<a href="addcomment/group?name={{ group.name }}" class="btn btn-default">Comments</a>
 			{% endif %}
 		</div>

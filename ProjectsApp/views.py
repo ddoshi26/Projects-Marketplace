@@ -97,11 +97,11 @@ def deleteProject(request):
 
 			if project_object.created_by == request.user or request.user.is_admin:
 				project_object.delete()
-				return render(request, 'projects.html')	
+				return render(request, 'projectdeletesuccess.html')	
 			else:
-				return render(request, 'deleteformfailure.html')
+				return render(request, 'engineerautherror.html')
 		else:
-			return render(request, 'deleteautherror.html')
+			return render(request, 'engineerautherror.html')
 	else:
 		return render(request, 'autherror.html')
 

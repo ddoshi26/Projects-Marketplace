@@ -5,6 +5,7 @@ from django.shortcuts import render
 
 from . import models
 from . import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 def getGroups(request):
     if request.user.is_authenticated():
@@ -67,6 +68,27 @@ def getGroupFormSuccess(request):
     # render error page if user is not logged in
     return render(request, 'autherror.html')
 
+def deleteGroup(request):
+        if request.user.is_authenticated():
+                if request.user.is_admin or request.user.is_student:
+                        in_name = request.GET.get('name', 'None')
+
+                        group_object = models.Group.objects.get(name__exact=in_name)
+			
+			try:
+				in_group = group_object.members.get(email=request.user.email)
+			except ObjectDoesNotExist:
+				in_group = None
+			
+                        if in_group != None or request.user.is_admin:
+                                group_object.delete()
+                                return render(request, 'groupdeletesuccess.html')
+                        else:
+                                return render(request, 'memberautherror.html')
+                else:
+                        return render(request, 'studentautherror.html')
+        else:
+                return render(request, 'autherror.html')
 
 
 def joinGroup(request):
