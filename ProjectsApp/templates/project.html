@@ -18,6 +18,7 @@
 			<h3><b>Skills<b><p></p><p> {{ project.skills }}</p></h3>
 			<h3><b>Company<b><p></p><p> {{ project.company }} </p></h3>
 			<br>
+			<a href="/project/update?name={{ project.name }}" class="btn btn-default">Update Project</a>
 			<a href="/project/addgroup?name={{ project.name }}" class="btn btn-default">Add group</a>
 			{% if bookmarked %}
 			<a href="/project/unbookmark?name={{ project.name }}" class="btn btn-default">Unbookmark This Project</a>
