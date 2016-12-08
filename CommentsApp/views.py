@@ -52,7 +52,6 @@ def getGComments(request):
 # to add a new comment to a group
 def addGComment(request):
     if request.method == 'POST' and request.user.is_authenticated():
-        print('123')
         form = forms.CommentForm(request.POST)
         groupName = request.GET.get('name', 'None')
         currentGroup = models.Group.objects.get(name__exact=groupName)

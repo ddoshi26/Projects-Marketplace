@@ -131,23 +131,37 @@ def addMemberForm(request):
             groupName = request.GET.get('name', 'None')
             currentGroup = models.Group.objects.get(name__exact=groupName)
             
-            if form.is_valid() and currentGroup.members.filter(email__exact=request.user.email):
-                
-                # adding user to group
+            if form.is_valid() and currentGroup.members.filter(email__exact=request.user.email):    
+
+                # checking if a member with that email exists
                 newMemberEmail = form.cleaned_data['email']
-                newMember = models.MyUser.objects.get(email__exact=newMemberEmail)
-                currentGroup.members.add(newMember)   
-                currentGroup.save() 
+                if models.MyUser.objects.filter(email__exact=newMemberEmail): 
 
-                # adding group to the user
-                newMember.group_set.add(currentGroup)
-                newMember.save()
+                    newMember = models.MyUser.objects.get(email__exact=newMemberEmail)    
 
-                context = {
-                    'groupname' : groupName,
-                    'newmembername' : newMember.get_full_name
-                }
-                return render(request, 'groupformaddmembersuccess.html', context)
+                    # adding user to group
+                    currentGroup.members.add(newMember)   
+                    currentGroup.save() 
+
+                    # adding group to the user
+                    newMember.group_set.add(currentGroup)
+                    newMember.save()
+
+                    context = {
+                        'groupname' : groupName,
+                        'newmembername' : newMember.get_full_name
+                    }
+                    return render(request, 'groupformaddmembersuccess.html', context)
+                
+                else:
+                    groupName = request.GET.get('name', 'None')
+            
+                    if request.user.group_set.filter(name__exact=groupName):
+                        context = {
+                            'gname' : groupName
+                        }
+                        
+                        return render(request, 'addMemberForm.html', context)
 
         else:
             groupName = request.GET.get('name', 'None')
