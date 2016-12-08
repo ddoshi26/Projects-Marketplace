@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from . import models
 from .import forms
-from forms import ProjectForm
+from forms import ProjectForm, ProjectUpdateForm
 from EngineerApp.models import Engineer
 from CompaniesApp.models import Company
 from django.http import Http404
@@ -96,11 +96,11 @@ def deleteProject(request):
 
 			if project_object.created_by == request.user or request.user.is_admin:
 				project_object.delete()
-				return render(request, 'projects.html')	
+				return render(request, 'projectdeletesuccess.html')	
 			else:
-				return render(request, 'deleteformfailure.html')
+				return render(request, 'engineerautherror.html')
 		else:
-			return render(request, 'deleteautherror.html')
+			return render(request, 'engineerautherror.html')
 	else:
 		return render(request, 'autherror.html')
 
