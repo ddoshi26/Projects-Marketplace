@@ -21,5 +21,5 @@ urlpatterns = [
 	url(r'^university/course/addstudentsform$', views.getAddStudentsForm, name='AddStudentsForm'),
 	url(r'^university/course/addstudentsformsuccess$', views.addStudentsFormSuccess, name='AddStudentsFormSuccess'),
 	url(r'^university/course$', views.getCourse, name="Course"),
-    	url(r'^university$', views.getUniversity, name='University'),
+    url(r'^university$', views.getUniversity, name='University'),
 ]

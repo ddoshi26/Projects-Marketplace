@@ -37,13 +37,26 @@ def getGroupForm(request):
 
 def getGroupFormSuccess(request):
     if request.user.is_authenticated():
-        if request.method == 'POST':
+        if request.method == 'POST' and request.user.is_student:
             form = forms.GroupForm(request.POST)
             if form.is_valid():
+                # checks if a group with the same name already exists
                 if models.Group.objects.filter(name__exact=form.cleaned_data['name']).exists():
                     return render(request, 'groupform.html', {'error' : 'Error: That Group name already exists!'})
                 new_group = models.Group(name=form.cleaned_data['name'], description=form.cleaned_data['description'])
                 new_group.save()
+
+                # make the creator a member of the group
+                new_group.members.add(request.user)
+                new_group.save()
+
+                request.user.group_set.add(new_group)
+                request.user.save()
+
+                # add the group to the creator's profile
+                request.user.group_set.add(new_group)
+                request.user.save()
+
                 context = {
                     'name' : form.cleaned_data['name'],
                 }
@@ -53,6 +66,8 @@ def getGroupFormSuccess(request):
         return render(request, 'groupform.html')
     # render error page if user is not logged in
     return render(request, 'autherror.html')
+
+
 
 def joinGroup(request):
     if request.user.is_authenticated():
@@ -83,4 +98,44 @@ def unjoinGroup(request):
         }
         return render(request, 'group.html', context)
     return render(request, 'autherror.html')
+
+
+
+def addMemberForm(request):
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            
+            form = forms.NewMemberForm(request.POST)
+            groupName = request.GET.get('name', 'None')
+            currentGroup = models.Group.objects.get(name__exact=groupName)
+            
+            if form.is_valid() and currentGroup.members.filter(email__exact=request.user.email):
+                
+                # adding user to group
+                newMemberEmail = form.cleaned_data['email']
+                newMember = models.MyUser.objects.get(email__exact=newMemberEmail)
+                currentGroup.members.add(newMember)   
+                currentGroup.save() 
+
+                # adding group to the user
+                newMember.group_set.add(currentGroup)
+                newMember.save()
+
+                context = {
+                    'groupname' : groupName,
+                    'newmembername' : newMember.get_full_name
+                }
+                return render(request, 'groupformaddmembersuccess.html', context)
+
+        else:
+            groupName = request.GET.get('name', 'None')
+            
+            if request.user.group_set.filter(name__exact=groupName):
+                context = {
+                    'gname' : groupName
+                }
+                
+                return render(request, 'addMemberForm.html', context)
+    else:
+         return render(request, 'autherror.html')   
     

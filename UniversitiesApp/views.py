@@ -216,7 +216,7 @@ def addStudentsFormSuccess(request):
 					in_university_name = request.GET.get('name', 'None')
 					in_university = models.University.objects.get(name__exact=in_university_name)
 					in_course_id = request.GET.get('course', 'None')
-					in_course = models.Course.objects.get(tag__exact=on_course_id)
+					in_course = models.Course.objects.get(tag__exact=in_course_id)
 					
 					in_user_email = form.cleaned_data['email']
 					in_user=models.MyUser.objects.get(email__exact=in_user_email)
