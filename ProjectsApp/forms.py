@@ -9,3 +9,7 @@ class ProjectForm(forms.Form):
 	planguage = forms.CharField(label='Programming Language', max_length=100, widget=forms.TextInput, required=True)
 	exp = forms.CharField(label='Experience', max_length=200, widget=forms.TextInput)
 	skills = forms.CharField(label='Skills', max_length=200, widget=forms.TextInput, required=True)
+
+class GroupForm(forms.Form):
+	university = forms.CharField(label='University', max_length=200, widget=forms.TextInput, required=True)
+	group = forms.CharField(label='Group', max_length=200, widget=forms.TextInput, required=True)

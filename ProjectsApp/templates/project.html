@@ -18,7 +18,14 @@
 			<h3><b>Skills<b><p></p><p> {{ project.skills }}</p></h3>
 			<h3><b>Company<b><p></p><p> {{ project.company }} </p></h3>
 			<br>
-			<a href="/project/addgroup?name={{ project.name }}" class="btn btn-default">Add group</a>
+
+			{% if project.group %}
+				<h2><b>Group assigned:<b><p></p><p> <a href="/group?name={{ project.group.name }}">{{ project.group }} </p></h2></a>
+				<a href="/project/addgroup?projectname={{ project.name }}" class="btn btn-default">Change group</a>
+			{% else %}
+				<a href="/project/addgroup?projectname={{ project.name }}" class="btn btn-default">Add group</a>
+			{% endif %}
+			
 		</div>
 	</div>
 

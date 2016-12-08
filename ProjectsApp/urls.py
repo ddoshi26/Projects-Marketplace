@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^project/projectform$', views.getProjectForm, name='ProjectForm'),
     url(r'^project$', views.getProject, name='Project'),
     url(r'^project/formsuccess$', views.getProjectFormSuccess, name='ProjectFormSuccess'),
+    url(r'^project/addgroup$', views.getGroupFormSuccess, name='AddGroupFormSuccess'),
 ]

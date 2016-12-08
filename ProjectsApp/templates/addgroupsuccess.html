@@ -1,0 +1,14 @@
+{% extends "body.html" %}
+
+{% block content %}
+        <meta http-equiv="refresh" content="5;url=/project?name={{ pname }}"/>
+        <!-- Content -->
+        <div class="container theme-showcase" role="main">
+                <div class="jumbotron">
+                        <h2>Project "{{ gname }}" was successfully assigned to {{ pname }}!</h2>
+                        <p>This page will redirect momentarily...if it does not <a href="/project?name={{ pname }}">click here!</a></p>
+                </div>
+        </div>
+
+{% endblock %}
+
