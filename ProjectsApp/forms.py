@@ -16,3 +16,6 @@ class ProjectUpdateForm(forms.ModelForm):
 		model = Project
 		fields = ('name', 'description', 'programming_language', 'experience', 'skills')
 
+class GroupForm(forms.Form):
+	university = forms.CharField(label='University', max_length=200, widget=forms.TextInput, required=True)
+	group = forms.CharField(label='Group', max_length=200, widget=forms.TextInput, required=True)
