@@ -19,6 +19,11 @@
 			<h3><b>Company<b><p></p><p> {{ project.company }} </p></h3>
 			<br>
 			<a href="/project/addgroup?name={{ project.name }}" class="btn btn-default">Add group</a>
+			{% if bookmarked %}
+			<a href="/project/unbookmark?name={{ project.name }}" class="btn btn-default">Unbookmark This Project</a>
+			{% else %}
+			<a href="/project/bookmark?name={{ project.name }}" class="btn btn-default">Bookmark This Project</a>
+			{% endif %}
 			<a href="/project/delete?name={{ project.name }}" class="btn btn-default">Delete Project</a>
 		</div>
 	</div>

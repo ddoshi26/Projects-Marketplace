@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.db.models.signals import post_save
+from BookmarkApp.models import Bookmark
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
@@ -90,6 +91,8 @@ class MyUser(AbstractBaseUser):
     is_student = models.BooleanField(default=False,)
     is_professor = models.BooleanField(default=False,)
     is_engineer = models.BooleanField(default=False,)    
+    
+    bookmarks = models.ManyToManyField(Bookmark)
 
     objects = MyUserManager()
 

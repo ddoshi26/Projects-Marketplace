@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'CommentsApp',
     'TeacherApp',
     'EngineerApp',
+    'BookmarkApp',
 ]
 
 MIDDLEWARE_CLASSES = [

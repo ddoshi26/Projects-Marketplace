@@ -20,11 +20,11 @@
                    {% for item in teachers %}
                    <tr>
 			
-                       	<td><a href="/teacher?name={{ item.name }}"><img src="/{{ item.photo }}"></a></td>
+                       	<td><a href="/teacher?email={{ item.email }}"><img src="/{{ item.photo }}"></a></td>
                        	<td>{{ item.teacher_id }}</td>
 		  	<td>{{ item.name }}</td>
 			<td>{{ item.university }}</td>
-			<td>{{ item.contact_info }} </td>
+			<td>{{ item.email }} </td>
                    </tr>
                    {% endfor %}
                 </tbody>

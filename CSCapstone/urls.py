@@ -18,5 +18,6 @@ urlpatterns = [
 	url(r'^', include('UniversitiesApp.urls')),
 	url(r'^', include('TeacherApp.urls')),
 	url(r'^', include('CommentsApp.urls')),	
-	url(r'^', include('EngineerApp.urls')),		
+	url(r'^', include('EngineerApp.urls')),
+	url(r'^', include('BookmarkApp.urls')),		
 ]
