@@ -142,3 +142,35 @@ def unBookmarkProject(request):
 		}
 		return render(request, 'project.html', context)
 	return render(request, 'autherror.html')
+
+def updateProject(request):
+	if request.user.is_authenticated():
+		if request.user.is_engineer:
+			project_name = request.GET.get('name', 'None')
+			project_obj = models.Project.objects.get(name=project_name)
+			# Check for groups
+			try:
+				existing_bookmark = request.user.bookmarks.get(project=project_name)
+			except ObjectDoesNotExist:
+				existing_bookmark=None
+			
+			form = ProjectUpdateForm(request.POST or None, instance=project_obj)
+
+			if form.is_valid():
+				if form.cleaned_data['name'] != project_name and existing_bookmark != None:
+					existing_bookmark.project=form.cleaned_data['name']
+					existing_bookmark.save()
+
+				form.save()
+				messages.success(request, 'Success, project has been updated!')
+				return render(request, 'projectupdatesuccess.html')
+
+			context = {
+				"form": form,
+				"page_name" : "Update Project",
+				"button_value" : "Update",
+				"links" : ["logout"],
+			}
+			return render(request, 'auth_form.html', context)
+		return render(request, 'engineerautherror.html')
+	return render(request, 'autherror.html')
