@@ -21,8 +21,8 @@ def getTeachers(request):
 
 def getTeacher(request):
 	if request.user.is_authenticated():
-		request_email = request.user.email
-		
+		request_email = request.GET.get('email', 'None')
+			
 		try:
 			teacher_object = Teacher.objects.get(email=request_email)
 			#is_student = teacher_object.students.filter(email__exact=request.user.email)
@@ -31,7 +31,6 @@ def getTeacher(request):
 
 		context = {
 			'teacher' : teacher_object,
-			#'userIsStudent' : is_student,
 		}
 
 		return render(request, 'teacher.html', context)
