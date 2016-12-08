@@ -1,7 +1,3 @@
-"""ProjectsApp URL Configuration
-
-Created by Harris Christiansen on 10/02/16.
-"""
 from django.conf.urls import url
 
 from . import views
@@ -12,4 +8,8 @@ urlpatterns = [
     url(r'^project$', views.getProject, name='Project'),
     url(r'^project/formsuccess$', views.getProjectFormSuccess, name='ProjectFormSuccess'),
     url(r'^project/addgroup$', views.getGroupFormSuccess, name='AddGroupFormSuccess'),
+    url(r'^project/delete$', views.deleteProject, name='DeleteProject'),
+    url(r'^project/bookmark$', views.bookmarkProject, name='BookmarkProject'),
+    url(r'^project/unbookmark$', views.unBookmarkProject, name='UnBookmarkProject'),
+    url(r'^project/update$', views.updateProject, name='UpdateProject'),
 ]
