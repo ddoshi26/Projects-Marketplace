@@ -1,0 +1,30 @@
+{% extends "body.html" %}
+
+{% block content %}
+        <!-- Content -->
+    <div class="container theme-showcase" role="main">
+                <div class="jumbotron">
+                        <p><h3><b>Email:</b> {{ user.email }}</h3></p>
+                        <p><h3><b>Name:</b> {{ user.first_name }} {{ user.last_name }}</h3></p>
+                </div>
+
+		<div class="table-responsive">
+                        <table class="table table-striped sortable">
+                                <thead>
+                                        <tr>
+                                                <th>Project Name</th>
+						<th>Created On</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        {% for item in user.bookmarks.all %}
+                                        <tr>
+                                                <td><a href="/project?name={{ item.project }}">{{ item.project }}</a></td>
+						<td>{{ item.created_at }} GMT</td>
+                                        </tr>
+                                        {% endfor %}
+                                </tbody>
+                        </table>
+                </div>
+	</div>
+{% endblock %}

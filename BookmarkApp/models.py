@@ -7,6 +7,7 @@ from django.db import models
 class Bookmark(models.Model):
 	email = models.CharField(max_length=300)
 	project = models.CharField(max_length=300)
+	created_at = models.DateTimeField('date created', auto_now=True)
 
 	def __str__(self):
 		return self.name

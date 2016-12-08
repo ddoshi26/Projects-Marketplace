@@ -3,6 +3,7 @@
 Created by Harris Christiansen on 10/02/16.
 """
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
 
 from . import models
 from .import forms
@@ -10,6 +11,7 @@ from forms import ProjectForm
 from EngineerApp.models import Engineer
 from CompaniesApp.models import Company
 from django.http import Http404
+from BookmarkApp.models import Bookmark
 
 def getProjects(request):
 	projects_list = models.Project.objects.all()
@@ -28,12 +30,18 @@ def getProjectForm(request):
 def getProject(request):
 	if request.user.is_authenticated():
 		in_name = request.GET.get('name', 'None')
-		
 		in_project = models.Project.objects.get(name__exact=in_name)
+		
+		bookmarked = True
 
+		try:
+			existing_obj=request.user.bookmarks.get(project=in_name)
+		except ObjectDoesNotExist:
+			bookmarked=False
+			
 		context = {
 			'project' : in_project,
-		#	'user_name' :
+			'bookmarked' : bookmarked,
 		}
 
 		return render(request, 'project.html', context)
@@ -94,4 +102,43 @@ def deleteProject(request):
 		else:
 			return render(request, 'deleteautherror.html')
 	else:
-		return render(request, 'autherror.html') 										
+		return render(request, 'autherror.html')
+
+def bookmarkProject(request):
+	if request.user.is_authenticated():
+		project_name = request.GET.get('name', 'None')
+		project_obj = models.Project.objects.get(name=project_name)
+
+		bookmark_new = Bookmark(email=request.user.email, project=project_name)
+		bookmark_new.save()
+		
+		try:
+			existing_obj=request.user.bookmarks.get(project=project_name)
+		except ObjectDoesNotExist:	
+			request.user.bookmarks.add(bookmark_new)
+			request.user.save()
+
+		context = {
+			'project': project_obj,
+			'bookmarked': True,
+		}	
+
+		return render(request, 'project.html', context)
+	return render(request, 'autherror.html')
+
+def unBookmarkProject(request):
+	if request.user.is_authenticated():
+		project_name=request.GET.get('name', 'None')
+		project_obj = models.Project.objects.get(name=project_name)
+
+		bookmark_obj=request.user.bookmarks.get(project=project_name)
+		
+		request.user.bookmarks.remove(bookmark_obj)
+		bookmark_obj.delete()
+
+		context = {
+			'project' : project_obj,
+			'bookmarked' : False,
+		}
+		return render(request, 'project.html', context)
+	return render(request, 'autherror.html')
