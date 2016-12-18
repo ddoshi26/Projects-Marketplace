@@ -31,9 +31,9 @@ This was assigned as a part of a class project. We were provided some skeleton c
 ## Contributors
 
 ## Original Contributors (Provided the skeleton code):
- @harrischristiansen  
- @thenamanpat  
- @dunbarj
+ - @harrischristiansen  
+ - @thenamanpat  
+ - @dunbarj
  
 ## Project Team
 - @lvde21: Lala De
