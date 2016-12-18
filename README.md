@@ -6,6 +6,8 @@ A marketplace for students/groups to find creative and challenging projects to w
 
 This was assigned as a part of a class project. We were provided some skeleton code and we implemented the below mentioned features.
 
+Built on Django and Python with a little bit of HTML and CSS.
+
 ## Features
 
 - [x] Task 1: CommentsApp
